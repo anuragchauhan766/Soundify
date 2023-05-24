@@ -2,6 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import User, { IUser } from "../models/userSchema.js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import ErrorResponse from "../utils/ErrorResponse.js";
+import { sendMailResetPassword } from "../services/Sendmail.js";
 
 export const login: RequestHandler = async (
   req: Request,
@@ -112,11 +113,16 @@ export const forgotpassword: RequestHandler = async (
   next: NextFunction
 ) => {
   const { email }: { email: string } = req.body;
+
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      next(new ErrorResponse("Email could not be sent", 404));
+      return next(new ErrorResponse("Email could not be sent", 404));
     }
+    const resetPasswordToken = await user.getResetPasswordToken();
+    const reseturl = `${process.env.CLIENT_BASE_URL}/auth/reset-password?t=${resetPasswordToken}`;
+    const name = user.name;
+    sendMailResetPassword(email, reseturl, "Reset your password", "test");
   } catch (error) {
     next(error);
   }

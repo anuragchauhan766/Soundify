@@ -15,7 +15,7 @@ export interface IUser {
 export interface UserDocument extends IUser, Document {
   matchPassword(inputPassword: string): Promise<boolean>;
   getSignedToken(): { accessToken: string; refreshToken: string };
-  getResetPasswordToken(): string;
+  getResetPasswordToken(): Promise<string>;
 }
 const userSchema = new Schema<IUser>({
   name: {
@@ -78,12 +78,20 @@ userSchema.methods = {
     );
     return { accessToken, refreshToken };
   },
-  getResetPasswordToken: function (this: UserDocument) {
-    const resetToken = crypto.randomBytes(20).toString("hex");
-    this.resetPasswordToken = crypto
-      .createHash("sha256")
-      .update(resetToken)
-      .digest("hex");
+  getResetPasswordToken: async function (this: UserDocument) {
+    const randomstring = crypto.randomBytes(20).toString("hex");
+    const resetPasswordToken = jwt.sign(
+      {
+        randomstring,
+      },
+      process.env.RESET_PASSWORD_SECRET_KEY as string,
+      {
+        expiresIn: "1d",
+      }
+    );
+    this.resetPasswordToken = resetPasswordToken;
+    await this.save();
+    return resetPasswordToken;
   },
 };
 
