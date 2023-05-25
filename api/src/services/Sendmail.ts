@@ -1,35 +1,50 @@
-import nodemailer, {
-  createTransport,
-  SendMailOptions,
-  TransportOptions,
-} from "nodemailer";
-import ErrorResponse from "../utils/ErrorResponse.js";
-import SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
+import { createTransport, SendMailOptions } from "nodemailer";
+import hbs, {
+  NodemailerExpressHandlebarsOptions,
+  TemplateOptions,
+} from "nodemailer-express-handlebars";
+import path from "path";
 
-export const sendMailResetPassword = (
+export const sendMailResetPassword = async (
   to?: string,
   url?: string,
-  text?: string,
   name?: string
 ) => {
   const transporter = createTransport({
-    service: "gmail",
+    host: "smtp-relay.sendinblue.com",
+    port: 587,
     auth: {
-      user: process.env.NODEMAIL_USERNAME,
-      pass: process.env.NODEMAIL_PASSWORD,
+      user: process.env.SEND_IN_BLUE_USERNAME,
+      pass: process.env.SEND_IN_BLUE_PASSWORD,
     },
   });
-  const mailOptions: SendMailOptions = {
-    from: process.env.NODEMAIL_EMAIL_FROM,
-    to: to,
-    subject: "RESET YOUR PASSWORD",
-    html: `<h1>hello this is test email</h1>`,
+
+  // using custom email template with nodemailer express handler
+  const handlebarsOptions: NodemailerExpressHandlebarsOptions = {
+    viewEngine: {
+      extname: ".handlebars",
+      partialsDir: path.resolve("./src/views"),
+      defaultLayout: false,
+    },
+    viewPath: path.resolve("./src/views"),
+    extName: ".handlebars",
   };
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      return err;
-    }
-    return info;
-  });
+  transporter.use("compile", hbs(handlebarsOptions));
+
+  const mailOptions: SendMailOptions & TemplateOptions = {
+    from: {
+      name: "Spotify",
+      address: process.env.NODEMAIL_EMAIL_FROM as string,
+    },
+    to: to,
+    subject: "RESET YOUR PASSWORD",
+    template: "email",
+    context: {
+      name,
+      url,
+    },
+  };
+
+  return await transporter.sendMail(mailOptions);
 };

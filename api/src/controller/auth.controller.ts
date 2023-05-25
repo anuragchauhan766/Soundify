@@ -122,7 +122,7 @@ export const forgotpassword: RequestHandler = async (
     const resetPasswordToken = await user.getResetPasswordToken();
     const reseturl = `${process.env.CLIENT_BASE_URL}/auth/reset-password?t=${resetPasswordToken}`;
     const name = user.name;
-    sendMailResetPassword(email, reseturl, "Reset your password", "test");
+    await sendMailResetPassword(email, reseturl, name);
   } catch (error) {
     next(error);
   }
