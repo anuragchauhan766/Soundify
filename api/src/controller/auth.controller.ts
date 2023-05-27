@@ -3,7 +3,7 @@ import User, { IUser } from "../models/userSchema.js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import ErrorResponse from "../utils/ErrorResponse.js";
 import { sendMailResetPassword } from "../services/Sendmail.js";
-
+import { body, validationResult } from "express-validator";
 export const login: RequestHandler = async (
   req: Request,
   res: Response,
@@ -69,7 +69,10 @@ export const signup: RequestHandler = async (
 
     res.status(201).json({
       success: true,
-      user,
+      user: {
+        name: user.name,
+        email: user.email,
+      },
     });
   } catch (error) {
     return next(error);
@@ -123,6 +126,49 @@ export const forgotpassword: RequestHandler = async (
     const reseturl = `${process.env.CLIENT_BASE_URL}/auth/reset-password?t=${resetPasswordToken}`;
     const name = user.name;
     await sendMailResetPassword(email, reseturl, name);
+    res
+      .status(200)
+      .json({ success: true, message: "Password Reset Email sent" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const resetpassword: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  let resetPasswordToken: string | undefined;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    resetPasswordToken = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!resetPasswordToken) {
+    return next(new ErrorResponse("Unauthoriazed", 401));
+  }
+  try {
+    const decoded = jwt.verify(
+      resetPasswordToken,
+      process.env.RESET_PASSWORD_SECRET_KEY as string
+    ) as JwtPayload;
+    const { password }: { password: string } = req.body;
+    const user = await User.findOne({ _id: decoded.id, resetPasswordToken });
+    if (!user) {
+      return next(new ErrorResponse("Wrong Reset Password token", 404));
+    }
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    await user.save();
+    console.log(user);
+    res
+      .status(200)
+      .json({ success: true, message: "Password Reset successfully" });
+    next();
   } catch (error) {
     next(error);
   }

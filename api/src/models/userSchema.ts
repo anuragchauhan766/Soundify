@@ -2,14 +2,15 @@ import { Date, Schema, model, Document } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-
+import moment from "moment";
+import validator from "validator";
 export interface IUser {
   name: string;
   email: string;
   password: string;
-  dob: Date;
+  dob: string;
   gender: string;
-  resetPasswordToken: string;
+  resetPasswordToken?: string;
 }
 
 export interface UserDocument extends IUser, Document {
@@ -22,12 +23,20 @@ const userSchema = new Schema<IUser>({
     type: String,
     trim: true,
     required: [true, "Name required"],
+    lowercase: true,
   },
   email: {
     type: String,
     trim: true,
     unique: true,
+    lowercase: true,
     required: [true, "Email required"],
+    validate: {
+      validator: function (value: string) {
+        return validator.default.isEmail(value);
+      },
+      message: "Invalid Email",
+    },
   },
   password: {
     type: String,
@@ -35,16 +44,21 @@ const userSchema = new Schema<IUser>({
     minlength: 8,
   },
   dob: {
-    type: Date,
+    type: String,
     required: [true, "Date of birth required"],
   },
   gender: {
     type: String,
-    required: [true, "Gender required"],
+    validate: {
+      validator: function (value: string) {
+        return ["Male", "Female", "Others"].includes(value);
+      },
+      message: (props) => `${props.value} is not supported`,
+    },
   },
   resetPasswordToken: {
     type: String,
-    default: "",
+    default: undefined,
   },
 });
 
@@ -53,6 +67,13 @@ userSchema.pre("save", async function (this: UserDocument, next) {
     next();
   }
   this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
+userSchema.pre("save", async function (this: UserDocument, next) {
+  if (!this.isModified("dob")) {
+    next();
+  }
+  this.dob = moment(this.dob, "DD-MM-YYYY").format("DD-MM-YYYY");
   next();
 });
 
@@ -83,10 +104,12 @@ userSchema.methods = {
     const resetPasswordToken = jwt.sign(
       {
         randomstring,
+        id: this._id,
+        email: this.email,
       },
       process.env.RESET_PASSWORD_SECRET_KEY as string,
       {
-        expiresIn: "1d",
+        expiresIn: "1min",
       }
     );
     this.resetPasswordToken = resetPasswordToken;
