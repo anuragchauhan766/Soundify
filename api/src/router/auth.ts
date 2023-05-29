@@ -7,11 +7,15 @@ import {
   signup,
 } from "../controller/auth.controller.js";
 import { checkSchema } from "express-validator";
-import { registrationSchema, validate } from "../utils/validator.js";
+import {
+  loginschema,
+  registrationSchema,
+  validate,
+} from "../utils/validator.js";
 
 const router = Router();
 
-router.post("/login", login);
+router.post("/login", validate(checkSchema(loginschema)), login);
 
 router.post("/signup", validate(checkSchema(registrationSchema)), signup);
 router.post("/refresh", refresh);
