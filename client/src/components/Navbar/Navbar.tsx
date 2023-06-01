@@ -8,13 +8,13 @@ import AccountMenu from "./AccountMenu";
 function Navbar() {
   return (
     <nav className="flex items-center justify-center w-full h-[72px] bg-primary-main z-[10] border-b-2 border-b-primary-light fixed">
-      <ul className="flex items-center justify-around w-full h-full cursor-pointer list-none justify-items-start max-w-[1600px] ms-auto me-auto pe-6">
-        <li className="grow basis-auto shrink-0 pe-5">
+      <ul className="flex items-center justify-around w-full h-full cursor-pointer list-none justify-items-start max-w-[1600px]  ms-auto me-auto px-6">
+        <li className="grow basis-auto shrink-0 pe-2 sm:pe-5">
           <Link to="/" className="" component={RouterNavLink}>
             <img src={logo} alt="soundify-logo" className="w-24 sm:w-32" />
           </Link>
         </li>
-        <li className="grow-0 basis-auto shrink-0 me-5 p-3">
+        <li className="grow-0 basis-auto shrink-0 sm:me-5 p-3">
           <Link
             to="/Home"
             className="flex items-center text-white text-xl space-x-2"
@@ -28,7 +28,7 @@ function Navbar() {
             <span className="hidden lg:inline-block">HOME</span>
           </Link>
         </li>
-        <li className="grow-0 basis-auto shrink-0 p-3 me-5">
+        <li className="grow-0 basis-auto shrink-0 p-3 sm:me-5">
           <Link
             to="/"
             className="flex items-center text-white text-xl space-x-2"
@@ -57,7 +57,7 @@ function Navbar() {
               }}
             />
           </div>
-          <div className="flex sm:hidden w-auto h-full items-center me-5">
+          <div className="flex sm:hidden w-auto h-full items-center  sm:me-5">
             <Link to="/search" component={RouterNavLink}>
               <SearchIcon
                 sx={{
