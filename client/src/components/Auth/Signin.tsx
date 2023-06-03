@@ -2,8 +2,13 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Link } from "@mui/material";
 import { NavLink as RouterNavLink } from "react-router-dom";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+
 function Signin() {
+  const { login } = useAuth();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const ref = useRef<HTMLInputElement>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const viewPassword = () => {
@@ -19,6 +24,13 @@ function Signin() {
       setShowPassword(false);
     }
   };
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const err = await login({ email, password });
+    console.log(err);
+  };
+
   return (
     <div className="w-full  flex  justify-center bg-gradient-to-r from-neutral-800 to-neutral-900 p-8">
       <div className="w-full max-w-3xl  bg-black rounded-xl text-white p-2 sm:p-20">
@@ -27,7 +39,10 @@ function Signin() {
         </h1>
         <hr className="w-full  border-t-2 border-t-orange-200 my-16" />
 
-        <form className="flex flex-col shrink w-full items-center space-y-7 px-4 sm:p-0">
+        <form
+          className="flex flex-col shrink w-full items-center space-y-7 px-4 sm:p-0"
+          onSubmit={handleLogin}
+        >
           <div className="flex flex-col w-full sm:w-1/2 flex-1 space-y-2">
             <label htmlFor="email" className="text-xl font-bold">
               Email
@@ -36,6 +51,8 @@ function Signin() {
               type="email"
               name="email"
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
               className="w-full text-white text-base font-semibold p-2 rounded-md outline-none border-none appearance-none  bg-[#121212] hover:outline-1 hover:outline-teal-50 shadow-slate-300/40 focus:border-5 focus:border-white"
             />
@@ -50,6 +67,8 @@ function Signin() {
                 type="password"
                 name="password"
                 id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 className="w-full text-white text-base font-semibold p-2 rounded-md outline-none border-none appearance-none  bg-[#121212] hover:outline-1 hover:outline-teal-50 shadow-slate-300/40 focus:border-5 focus:border-white"
               />

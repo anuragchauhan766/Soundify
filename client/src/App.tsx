@@ -2,6 +2,7 @@ import Signin from "./components/Auth/Signin";
 import Navbar from "./components/Navbar/Navbar";
 import { Routes, Route, Outlet } from "react-router-dom";
 import Profile from "./components/Profile/Profile";
+
 function Layout() {
   return (
     <>

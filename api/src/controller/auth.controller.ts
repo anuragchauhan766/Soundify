@@ -16,7 +16,7 @@ export const login: RequestHandler = async (
   }
 
   try {
-    const user = await User.findOne({ email }).select("password");
+    const user = await User.findOne({ email });
     if (!user) {
       return next(new ErrorResponse("Invalid Credentials", 401));
     }
@@ -40,6 +40,12 @@ export const login: RequestHandler = async (
     // send accesstoken to client
     res.status(200).json({
       success: true,
+      user: {
+        name: user.name,
+        email: user.email,
+        dob: user.dob,
+        gender: user.gender,
+      },
       accessToken,
     });
   } catch (error) {

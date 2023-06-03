@@ -5,14 +5,17 @@ import "./index.css";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { BrowserRouter } from "react-router-dom";
 import { theme } from "./themes/materialUi.ts";
+import { AuthProvider } from "./context/AuthContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <AuthProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </AuthProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   </React.StrictMode>
