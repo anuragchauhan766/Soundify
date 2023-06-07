@@ -13,6 +13,7 @@ export default {
           light: "#565656",
           dark: "#1e1e1e",
         },
+        "input-bg": "#121212",
         secondary: "#FCFCFC",
         ctc: "#83FFE6",
       },

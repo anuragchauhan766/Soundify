@@ -1,10 +1,10 @@
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
+
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import Logout from "@mui/icons-material/Logout";
+
 import React, { useState } from "react";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { Link } from "@mui/material";
@@ -86,26 +86,7 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {/* <Link to="/profile" component={RouterNavLink}>
-          <MenuItem>
-            <Avatar sx={{ backgroundColor: "white", color: "black" }} /> Profile
-          </MenuItem>
-        </Link>
-       
-
-       
-        <MenuItem>
-          <ListItemIcon>
-            <Logout
-              fontSize="small"
-              sx={{
-                color: "secondary.main",
-              }}
-            />
-          </ListItemIcon>
-          Logout
-        </MenuItem> */}
-        <Link to="/signin" component={RouterNavLink}>
+        <Link to="/auth/signin" component={RouterNavLink}>
           <MenuItem>
             <Avatar sx={{ backgroundColor: "white", color: "black" }} /> Sign in
           </MenuItem>

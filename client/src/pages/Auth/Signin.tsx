@@ -1,29 +1,14 @@
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Link } from "@mui/material";
 import { NavLink as RouterNavLink } from "react-router-dom";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+
+import PasswordField from "../../components/Form/PasswordField";
 
 function Signin() {
   const { login } = useAuth();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const ref = useRef<HTMLInputElement>(null);
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const viewPassword = () => {
-    if (!ref.current) {
-      return;
-    }
-    const type = ref.current.type;
-    if (type === "password") {
-      ref.current.type = "text";
-      setShowPassword(true);
-    } else {
-      ref.current.type = "password";
-      setShowPassword(false);
-    }
-  };
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,9 +17,9 @@ function Signin() {
   };
 
   return (
-    <div className="w-full  flex  justify-center bg-gradient-to-r from-neutral-800 to-neutral-900 p-8">
+    <div className="w-full  flex  justify-center bg-gradient-to-r from-neutral-800 to-neutral-900 p-8 ">
       <div className="w-full max-w-3xl  bg-black rounded-xl text-white p-2 sm:p-20">
-        <h1 className="text-center font-bold text-2xl sm:text-5xl mt-10 sm:mt-0 mb-10">
+        <h1 className="text-center font-bold text-2xl sm:text-5xl  sm:mt-0 my-10">
           Sign in to Soundify
         </h1>
         <hr className="w-full  border-t-2 border-t-orange-200 my-16" />
@@ -61,28 +46,7 @@ function Signin() {
             <label htmlFor="password" className="text-xl font-bold">
               Password
             </label>
-            <div className="relative">
-              <input
-                ref={ref}
-                type="password"
-                name="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="w-full text-white text-base font-semibold p-2 rounded-md outline-none border-none appearance-none  bg-[#121212] hover:outline-1 hover:outline-teal-50 shadow-slate-300/40 focus:border-5 focus:border-white"
-              />
-              <div className="h-full w-fit flex items-center absolute top-0 bottom-0 right-0  pe-5">
-                <button
-                  onClick={viewPassword}
-                  type="button"
-                  className="bg-transparent text-white
-                  border-none hover:scale-110"
-                >
-                  {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                </button>
-              </div>
-            </div>
+            <PasswordField password={password} setPassword={setPassword} />
           </div>
           <div className="w-full sm:w-1/2">
             <button
@@ -94,7 +58,7 @@ function Signin() {
           </div>
           <div className="text-sm">
             <Link
-              to="/forgotpassword"
+              to="/auth/forgotpassword"
               component={RouterNavLink}
               className="text-white underline hover:text-ctc"
             >
@@ -103,11 +67,11 @@ function Signin() {
           </div>
         </form>
 
-        <hr className="w-full  border-t-2 border-t-orange-200 my-16" />
-        <div className="text-sm w-full text-center">
+        <hr className="w-full  border-t-2 border-t-orange-200 my-10" />
+        <div className="text-sm w-full text-center my-10">
           <span>Don't have an account? </span>
           <Link
-            to="/signup"
+            to="/auth/signup"
             component={RouterNavLink}
             className="text-white  hover:text-ctc"
           >

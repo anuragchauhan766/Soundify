@@ -1,10 +1,5 @@
-export interface UserType {
-  name?: string;
-  email?: string;
-  dob?: string;
-  gender?: string;
-  password?: string;
-}
+import { UserType } from "./User";
+
 export interface LoginProps {
   email: string;
   password: string;
