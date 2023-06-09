@@ -19,7 +19,22 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": [
+        "./src/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@context/*": [
+        "./src/context/*"
+      ],
+      "@config/*": [
+        "./src/config/*"
+      ]
+    }
   },
   "include": [
     "src"

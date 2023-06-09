@@ -11,12 +11,14 @@ export interface IUser {
   dob: string;
   gender: string;
   resetPasswordToken?: string;
+  isverified: boolean;
 }
 
 export interface UserDocument extends IUser, Document {
   matchPassword(inputPassword: string): Promise<boolean>;
   getSignedToken(): { accessToken: string; refreshToken: string };
   getResetPasswordToken(): Promise<string>;
+  getActivationToken(): Promise<string>;
 }
 const userSchema = new Schema<IUser>({
   name: {
@@ -59,6 +61,10 @@ const userSchema = new Schema<IUser>({
   resetPasswordToken: {
     type: String,
     default: undefined,
+  },
+  isverified: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -112,8 +118,24 @@ userSchema.methods = {
         expiresIn: "1min",
       }
     );
-    this.resetPasswordToken = resetPasswordToken;
+    this.resetPasswordToken = randomstring;
     await this.save();
+    return resetPasswordToken;
+  },
+  getActivationToken: async function (this: UserDocument) {
+    const randomstring = crypto.randomBytes(20).toString("hex");
+    const resetPasswordToken = jwt.sign(
+      {
+        randomstring,
+        id: this._id,
+        email: this.email,
+      },
+      process.env.ACTIVATION_SECRET_KEY as string,
+      {
+        expiresIn: "1d",
+      }
+    );
+
     return resetPasswordToken;
   },
 };

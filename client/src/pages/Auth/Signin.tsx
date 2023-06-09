@@ -1,9 +1,9 @@
 import { Link } from "@mui/material";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import React, { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
 
-import PasswordField from "../../components/Form/PasswordField";
+import { useAuth } from "@src/context/AuthContext";
+import PasswordField from "@components/Form/PasswordField";
 
 function Signin() {
   const { login } = useAuth();

@@ -17,7 +17,6 @@ export interface AuthContextType {
   user: User | null;
   login: Login;
   signup: Signup;
-  isLoading: boolean;
 }
 
 export interface AuthResponse {

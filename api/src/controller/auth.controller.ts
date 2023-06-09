@@ -2,7 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import User, { IUser } from "../models/userSchema.js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import ErrorResponse from "../utils/ErrorResponse.js";
-import { sendMailResetPassword } from "../services/Sendmail.js";
+import { sendMail } from "../services/Sendmail.js";
 import { body, validationResult } from "express-validator";
 export const login: RequestHandler = async (
   req: Request,
@@ -72,15 +72,15 @@ export const signup: RequestHandler = async (
     }
 
     user = await User.create({ name, email, password, dob, gender });
-
+    const activationToken = await user.getActivationToken();
+    const url = `${process.env.CLIENT_BASE_URL}/auth/emailverification?t=${activationToken}`;
+    await sendMail(email, url, name, "Email Verification", "varificationmail");
     res.status(201).json({
       success: true,
-      user: {
-        name: user.name,
-        email: user.email,
-      },
+      message: "Email Verifcation mail has been sent",
     });
   } catch (error) {
+    console.log(error);
     return next(error);
   }
 };
@@ -131,7 +131,7 @@ export const forgotpassword: RequestHandler = async (
     const resetPasswordToken = await user.getResetPasswordToken();
     const reseturl = `${process.env.CLIENT_BASE_URL}/auth/reset-password?t=${resetPasswordToken}`;
     const name = user.name;
-    await sendMailResetPassword(email, reseturl, name);
+    await sendMail(email, reseturl, name, "RESET YOUR PASSWORD", email);
     res
       .status(200)
       .json({ success: true, message: "Password Reset Email sent" });
@@ -174,6 +174,37 @@ export const resetpassword: RequestHandler = async (
     res
       .status(200)
       .json({ success: true, message: "Password Reset successfully" });
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+export const verifyemail: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  let activationToken = req.query.t as string;
+
+  if (!activationToken) {
+    return next(new ErrorResponse("Invalid token", 401));
+  }
+  try {
+    const decoded = jwt.verify(
+      activationToken,
+      process.env.ACTIVATION_SECRET_KEY as string
+    ) as JwtPayload;
+
+    const user = await User.findOne({ _id: decoded.id });
+    if (!user) {
+      return next(new ErrorResponse("Invalid token", 404));
+    }
+    user.isverified = true;
+    await user.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "Email Verification successfull" });
     next();
   } catch (error) {
     next(error);

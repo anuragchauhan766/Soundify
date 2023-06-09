@@ -5,6 +5,7 @@ import {
   refresh,
   resetpassword,
   signup,
+  verifyemail,
 } from "../controller/auth.controller.js";
 import { checkSchema } from "express-validator";
 import {
@@ -21,4 +22,5 @@ router.post("/signup", validate(checkSchema(registrationSchema)), signup);
 router.post("/refresh", refresh);
 router.post("/forgotpassword", forgotpassword);
 router.post("/resetpassword", resetpassword);
+router.get("/verifyemail", verifyemail);
 export default router;

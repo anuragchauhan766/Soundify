@@ -1,7 +1,8 @@
 import logo from "../../assets/appLogo.svg";
 import { NavLink as RouterNavLink } from "react-router-dom";
-import Signupform from "../../components/Form/Signupform";
+
 import { Link } from "@mui/material";
+import Signupform from "@components/Form/Signupform";
 
 function Signup() {
   return (

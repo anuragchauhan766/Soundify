@@ -5,7 +5,10 @@ import TextInput from "./TextInput";
 import { useFormik } from "formik";
 import { signUpschema } from "../../schemas";
 import SubmitButton from "./SubmitButton";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useState } from "react";
+import Error from "./Error";
+import EmailVarificationDialog from "./EmailVarificationDialogbox";
 
 const defaultUserDetails: UserType = {
   name: "",
@@ -16,7 +19,9 @@ const defaultUserDetails: UserType = {
 };
 
 function Signupform() {
-  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [err, setErr] = useState<string>("");
+  const { signup } = useAuth();
   const {
     values,
     touched,
@@ -28,21 +33,21 @@ function Signupform() {
     isValid,
     isSubmitting,
     setSubmitting,
+    resetForm,
   } = useFormik({
     initialValues: defaultUserDetails,
     validationSchema: signUpschema,
     validateOnMount: true,
-    onSubmit: (values) => {
-      setTimeout(() => {
-        console.log("submit");
-        console.log(values);
-        setSubmitting(false);
-        navigate("/auth/signin");
-      }, 5000);
+    onSubmit: async (values) => {
+      const err = await signup(values);
+      if (!err) {
+        setOpen(true);
+      }
+      setErr(err);
+      setSubmitting(false);
+      resetForm();
     },
   });
-
-  console.log(errors);
 
   return (
     <form
@@ -108,6 +113,9 @@ function Signupform() {
           touched={touched.gender}
         />
       </div>
+      <div className="flex justify-start w-full sm:w-3/4 text-xl">
+        {err ? <Error err={err} /> : null}
+      </div>
       <div className="w-full sm:w-1/2">
         <SubmitButton
           disabled={!isValid}
@@ -115,6 +123,7 @@ function Signupform() {
           isSubmitting={isSubmitting}
         />
       </div>
+      <EmailVarificationDialog open={open} setOpen={setOpen} />
     </form>
   );
 }

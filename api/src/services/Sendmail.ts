@@ -5,10 +5,12 @@ import hbs, {
 } from "nodemailer-express-handlebars";
 import path from "path";
 
-export const sendMailResetPassword = async (
+export const sendMail = async (
   to?: string,
   url?: string,
-  name?: string
+  name?: string,
+  subject?: string,
+  template?: string
 ) => {
   const transporter = createTransport({
     host: "smtp-relay.sendinblue.com",
@@ -34,12 +36,12 @@ export const sendMailResetPassword = async (
 
   const mailOptions: SendMailOptions & TemplateOptions = {
     from: {
-      name: "Spotify",
+      name: "Soundify",
       address: process.env.NODEMAIL_EMAIL_FROM as string,
     },
     to: to,
-    subject: "RESET YOUR PASSWORD",
-    template: "email",
+    subject: subject,
+    template: template,
     context: {
       name,
       url,
