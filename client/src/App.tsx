@@ -7,6 +7,7 @@ import ForgotPassword from "./pages/Auth/ForgotPassword";
 import Signup from "./pages/Auth/Signup";
 import Resetpassword from "./pages/Auth/Resetpassword";
 import EmailVerfication from "./pages/Auth/EmailVerfication";
+import Userdatatest from "./pages/Auth/User";
 
 function Layout() {
   return (
@@ -25,6 +26,7 @@ function App() {
         // with navbar pages
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<Profile />}></Route>
+          <Route path="/user" element={<Userdatatest />}></Route>
         </Route>
         // without navbar pages
         <Route path="/auth/signin" element={<Signin />}></Route>

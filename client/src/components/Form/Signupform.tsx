@@ -1,4 +1,3 @@
-import { UserType } from "../../types/User";
 import GenderOptions from "./GenderInput";
 import Datepicker from "./Datepicker";
 import TextInput from "./TextInput";
@@ -9,8 +8,9 @@ import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import Error from "./Error";
 import EmailVarificationDialog from "./EmailVarificationDialogbox";
+import { SignupDataType } from "@src/types/User";
 
-const defaultUserDetails: UserType = {
+const defaultUserDetails: SignupDataType = {
   name: "",
   email: "",
   gender: "",

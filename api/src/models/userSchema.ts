@@ -11,7 +11,7 @@ export interface IUser {
   dob: string;
   gender: string;
   resetPasswordToken?: string;
-  isverified: boolean;
+  isVerified: boolean;
 }
 
 export interface UserDocument extends IUser, Document {
@@ -62,7 +62,7 @@ const userSchema = new Schema<IUser>({
     type: String,
     default: undefined,
   },
-  isverified: {
+  isVerified: {
     type: Boolean,
     default: false,
   },

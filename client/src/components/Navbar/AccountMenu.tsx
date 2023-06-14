@@ -27,7 +27,7 @@ export default function AccountMenu() {
           sx={{ ml: 2 }}
           aria-controls={open ? "account-menu" : undefined}
           aria-haspopup="true"
-          aria-aria-expanded={open ? "true" : undefined}
+          aria-expanded={open ? "true" : undefined}
         >
           <Avatar
             alt="user-account"

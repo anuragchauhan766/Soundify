@@ -9,7 +9,7 @@ interface Props {
   placeholder: string;
   name: string;
   id: string;
-  handleBlur: (e: React.FocusEvent<any>) => void;
+  handleBlur: (e: React.FocusEvent<unknown>) => void;
 }
 
 function PasswordField({

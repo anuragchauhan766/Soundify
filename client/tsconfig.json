@@ -22,8 +22,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@src/*": [
-        "./src/*"
+      "@config/*": [
+        "./src/config/*"
       ],
       "@components/*": [
         "./src/components/*"
@@ -31,9 +31,9 @@
       "@context/*": [
         "./src/context/*"
       ],
-      "@config/*": [
-        "./src/config/*"
-      ]
+      "@src/*": [
+        "./src/*"
+      ],
     }
   },
   "include": [

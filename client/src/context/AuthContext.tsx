@@ -5,20 +5,22 @@ import {
   Login,
   Signup,
 } from "../types/AuthContext";
-import axios from "../config/axiosConfig";
+import axios, { setAccesstoken } from "../config/axiosConfig";
 import { isAxiosError } from "axios";
-import { UserType } from "../types/User";
+import { UserDataType } from "../types/User";
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<UserType | undefined>(undefined);
+  const [user, setUser] = useState<Partial<UserDataType> | undefined>(
+    undefined
+  );
 
   const login: Login = async ({ email, password }) => {
     let err = "";
 
     try {
-      const { data, status } = await axios.post<AuthResponse>(
+      const { data } = await axios.post<AuthResponse>(
         "/auth/login",
         { email, password },
         {
@@ -27,11 +29,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           },
         }
       );
-      if (status === 200) {
-        setUser(data.user);
+      setUser(data.user);
 
-        err = "";
-      }
+      setAccesstoken(data.accessToken as string);
     } catch (error) {
       if (isAxiosError(error)) {
         err = error.response?.data.error.message;

@@ -1,9 +1,20 @@
-
 import axios from "axios";
 // Set the default base URL for all axios requests
-axios.defaults.baseURL = "http://localhost:3000/api";
 
-// Set the default headers for all axios requests
-axios.defaults.headers.common["Content-Type"] = "application/json";
+const httpClient = axios.create({
+  baseURL: "http://localhost:3000/api",
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-export default axios;
+export const setAccesstoken = (token: string) => {
+  console.log(token);
+  httpClient.defaults.headers.common["Authorization"] = "";
+  delete httpClient.defaults.headers.common["Authorization"];
+  if (token) {
+    httpClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  }
+};
+export default httpClient;

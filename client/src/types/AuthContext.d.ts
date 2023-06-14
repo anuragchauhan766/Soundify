@@ -1,27 +1,22 @@
-import { UserType } from "./User";
+import { LoginDataType, SignupDataType, UserDataType } from "./User";
 
-export interface LoginProps {
-  email: string;
-  password: string;
-}
-
-export type Login = ({ email, password }: LoginProps) => Promise<string>;
+export type Login = ({ email, password }: LoginDataType) => Promise<string>;
 export type Signup = ({
   name,
   email,
   dob,
   gender,
   password,
-}: UserType) => Promise;
+}: SignupDataType) => Promise;
 export interface AuthContextType {
-  user: User | null;
+  user?: Partial<UserDataType>;
   login: Login;
   signup: Signup;
 }
 
 export interface AuthResponse {
   success: boolean;
-  user?: UserType;
-  acccessToken?: string;
+  user?: Partial<UserDataType>;
+  accessToken?: string;
   error?: object;
 }

@@ -2,18 +2,18 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { UserType } from "../../types/User";
+import { SignupDataType } from "../../types/User";
 import { FormikErrors } from "formik";
 import ValidationError from "./ValidationError";
 
 interface Props {
   value: string;
-  handleblur: (e: React.FocusEvent<any>) => void;
+  handleblur: (e: React.FocusEvent<unknown>) => void;
   setFieldValue: (
     field: string,
     value: unknown,
     shouldValidate?: boolean | undefined
-  ) => Promise<void> | Promise<FormikErrors<UserType>>;
+  ) => Promise<void> | Promise<FormikErrors<SignupDataType>>;
   error?: string;
   touched?: boolean;
 }

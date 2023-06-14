@@ -19,7 +19,7 @@ export const authenticate: RequestHandler = async (
   }
 
   if (!accessToken) {
-    return next(new ErrorResponse("Unauthoriazed", 401));
+    return next(new ErrorResponse("Unauthoriazed not present", 401));
   }
   try {
     const decoded = jwt.verify(

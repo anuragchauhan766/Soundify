@@ -1,7 +1,7 @@
 import * as Yup from "yup";
-import { UserType } from "../types/User";
+import { LoginDataType, SignupDataType } from "../types/User";
 
-export const signUpschema: Yup.ObjectSchema<UserType> = Yup.object({
+export const signUpschema: Yup.ObjectSchema<SignupDataType> = Yup.object({
   name: Yup.string().min(2).max(25).required("Please enter your name"),
   email: Yup.string().email().required("Please enter your Email"),
   password: Yup.string()
@@ -22,6 +22,7 @@ export const signUpschema: Yup.ObjectSchema<UserType> = Yup.object({
   dob: Yup.string().required("Date of birth required"),
   gender: Yup.string().required("Gender required"),
 });
-// signUpschema
-//   .validate({ password: "" }, { abortEarly: false })
-//   .catch(console.log);
+export const logInschema: Yup.ObjectSchema<LoginDataType> = Yup.object({
+  email: Yup.string().email().required("Please enter your Email"),
+  password: Yup.string().required("Please enter Your password"),
+});

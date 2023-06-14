@@ -1,7 +1,13 @@
-export interface UserType {
-  name?: string;
-  email?: string;
-  dob?: string;
-  gender?: string;
-  password?: string;
+export interface LoginDataType {
+  email: string;
+  password: string;
+}
+export interface SignupDataType extends LoginDataType {
+  name: string;
+  dob: string;
+  gender: string;
+  password: string;
+}
+export interface UserDataType extends SignupDataType {
+  isVerified: boolean;
 }

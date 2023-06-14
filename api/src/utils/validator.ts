@@ -61,7 +61,11 @@ export const loginschema: Schema = {
   email: {
     notEmpty: true,
     isEmail: true,
-    normalizeEmail: true,
+    normalizeEmail: {
+      options: {
+        gmail_remove_dots: false,
+      },
+    },
     errorMessage: "Invalid Email",
     escape: true,
   },

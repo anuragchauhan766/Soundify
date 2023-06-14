@@ -20,10 +20,16 @@ export const login: RequestHandler = async (
     if (!user) {
       return next(new ErrorResponse("Invalid Credentials", 401));
     }
-
     const ismatch = await user.matchPassword(password);
+
     if (!ismatch) {
       return next(new ErrorResponse("Invalid credentials", 401));
+    }
+
+    if (!user.isVerified) {
+      return next(
+        new ErrorResponse("Please Verifiy Your Email and Try again", 401)
+      );
     }
 
     const { accessToken, refreshToken } = user.getSignedToken();
@@ -32,9 +38,9 @@ export const login: RequestHandler = async (
     res.cookie("refreshtoken", refreshToken, {
       httpOnly: true,
       sameSite: "none",
-      // secure: true,
+      secure: true,
       maxAge: 24 * 60 * 60 * 1000,
-      path: "/",
+      path: "/api/auth/refresh",
     });
 
     // send accesstoken to client
@@ -45,6 +51,7 @@ export const login: RequestHandler = async (
         email: user.email,
         dob: user.dob,
         gender: user.gender,
+        isVerified: user.isVerified,
       },
       accessToken,
     });
@@ -80,7 +87,6 @@ export const signup: RequestHandler = async (
       message: "Email Verifcation mail has been sent",
     });
   } catch (error) {
-    console.log(error);
     return next(error);
   }
 };
@@ -199,12 +205,42 @@ export const verifyemail: RequestHandler = async (
     if (!user) {
       return next(new ErrorResponse("Invalid token", 404));
     }
-    user.isverified = true;
+    user.isVerified = true;
     await user.save();
 
     res
       .status(200)
       .json({ success: true, message: "Email Verification successfull" });
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+export const sendVerificationMail: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return next(new ErrorResponse("Email could not be sent", 404));
+    }
+    const activationToken = await user.getActivationToken();
+    const url = `${process.env.CLIENT_BASE_URL}/auth/emailverification?t=${activationToken}`;
+    await sendMail(
+      email,
+      url,
+      user.name,
+      "Email Verification",
+      "varificationmail"
+    );
+
+    res
+      .status(200)
+      .json({ success: true, message: "Verification Mail Sent successfully" });
     next();
   } catch (error) {
     next(error);

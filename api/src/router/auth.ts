@@ -4,6 +4,7 @@ import {
   login,
   refresh,
   resetpassword,
+  sendVerificationMail,
   signup,
   verifyemail,
 } from "../controller/auth.controller.js";
@@ -23,4 +24,5 @@ router.post("/refresh", refresh);
 router.post("/forgotpassword", forgotpassword);
 router.post("/resetpassword", resetpassword);
 router.get("/verifyemail", verifyemail);
+router.post("/send-verification-mail", sendVerificationMail);
 export default router;

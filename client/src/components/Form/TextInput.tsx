@@ -1,4 +1,3 @@
-import { ErrorSharp } from "@mui/icons-material";
 import PasswordField from "./PasswordField";
 import ValidationError from "./ValidationError";
 
@@ -10,7 +9,7 @@ interface Props {
   name: string;
   id: string;
   label: string;
-  handleblur: (e: React.FocusEvent<any>) => void;
+  handleblur: (e: React.FocusEvent<unknown>) => void;
   error?: string;
   touched?: boolean;
 }
