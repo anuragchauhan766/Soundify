@@ -5,9 +5,12 @@ import {
   Login,
   Signup,
 } from "../types/AuthContext";
-import axios, { setAccesstoken } from "../config/axiosConfig";
+
 import { isAxiosError } from "axios";
 import { UserDataType } from "../types/User";
+import { httpClient } from "@config/axiosConfig";
+
+import { setAccesstoken } from "@src/helper/accesstoken";
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
@@ -20,8 +23,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     let err = "";
 
     try {
-      const { data } = await axios.post<AuthResponse>(
-        "/auth/login",
+      const { data } = await httpClient.post<AuthResponse>(
+        "/auth/signin",
         { email, password },
         {
           headers: {
@@ -30,7 +33,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       );
       setUser(data.user);
-
       setAccesstoken(data.accessToken as string);
     } catch (error) {
       if (isAxiosError(error)) {
@@ -45,7 +47,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signup: Signup = async (signUpData) => {
     let err = "";
     try {
-      await axios.post<AuthResponse>("/auth/signup", signUpData);
+      await httpClient.post<AuthResponse>("/auth/signup", signUpData);
+    } catch (error) {
+      if (isAxiosError(error)) {
+        err = error.response?.data.error.message;
+      } else {
+        err = "Opps! Something Unexpected happens";
+      }
+    }
+    return err;
+  };
+  const signout = async () => {
+    let err = "";
+    try {
+      await httpClient.get<AuthResponse>("/auth/signout");
     } catch (error) {
       if (isAxiosError(error)) {
         err = error.response?.data.error.message;
@@ -60,6 +75,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     user,
     login,
     signup,
+    signout,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -93,14 +93,14 @@ userSchema.methods = {
       { id: this._id },
       process.env.ACCESS_TOKEN_SECRET_KEY as string,
       {
-        expiresIn: "30s",
+        expiresIn: "15s",
       }
     );
     const refreshToken = jwt.sign(
       { id: this._id },
       process.env.REFRESH_TOKEN_SECRET_KEY as string,
       {
-        expiresIn: "1d",
+        expiresIn: "1min",
       }
     );
     return { accessToken, refreshToken };

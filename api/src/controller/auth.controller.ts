@@ -3,8 +3,8 @@ import User, { IUser } from "../models/userSchema.js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import ErrorResponse from "../utils/ErrorResponse.js";
 import { sendMail } from "../services/Sendmail.js";
-import { body, validationResult } from "express-validator";
-export const login: RequestHandler = async (
+
+export const signin: RequestHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -39,7 +39,9 @@ export const login: RequestHandler = async (
       httpOnly: true,
       sameSite: "none",
       secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      // maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 60 * 1000,
+
       path: "/api/auth/refresh",
     });
 
@@ -97,6 +99,7 @@ export const refresh: RequestHandler = async (
   next: NextFunction
 ) => {
   const refreshToken: string | undefined = req.cookies.refreshtoken;
+  console.log(refreshToken);
   if (!refreshToken) {
     return next(new ErrorResponse("Unauthorized", 401));
   }
@@ -113,7 +116,7 @@ export const refresh: RequestHandler = async (
       { id: decoded.id },
       process.env.ACCESS_TOKEN_SECRET_KEY as string,
       {
-        expiresIn: "5s",
+        expiresIn: "15s",
       }
     );
     res.status(201).json({ success: true, accessToken: newAccessToken });
@@ -245,4 +248,12 @@ export const sendVerificationMail: RequestHandler = async (
   } catch (error) {
     next(error);
   }
+};
+export const signout: RequestHandler = async (req, res, next) => {
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+    path: "/api/auth/refresh",
+  });
 };

@@ -1,5 +1,5 @@
 import logo from "../../assets/appLogo.svg";
-import axios from "@config/axiosConfig";
+import { httpClient } from "@config/axiosConfig";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -11,7 +11,7 @@ function EmailVerfication() {
   const handleVerfication = async () => {
     const url = `auth/verifyemail?t=${searchParams.get("t")}`;
     try {
-      const { status } = await axios.get(url);
+      const { status } = await httpClient.get(url);
       if (status === 200) setIsverified(true);
     } catch (error) {
       seterr(

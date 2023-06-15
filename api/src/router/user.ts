@@ -4,7 +4,6 @@ import { CustomRequest } from "../types/express/index.js";
 const router = Router();
 
 router.get("/", authenticate, (req: CustomRequest, res: Response) => {
-  res.json(req.user);
-  res.json({ message: "protected route" });
+  return res.json(req.user);
 });
 export default router;

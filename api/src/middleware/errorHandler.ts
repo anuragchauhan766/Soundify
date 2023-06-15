@@ -17,11 +17,11 @@ const errorHandler = (
       message: error.message,
     };
   } else if (error instanceof jwt.JsonWebTokenError) {
-    (status = 401),
-      (err = {
-        name: error.name,
-        messgage: error.message,
-      });
+    status = 401;
+    err = {
+      name: error.name,
+      messgage: error.message,
+    };
   } else if (error instanceof Error.ValidationError) {
     const errors: any = {};
     Object.keys(error.errors).forEach((key) => {
