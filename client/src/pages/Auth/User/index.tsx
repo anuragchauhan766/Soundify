@@ -2,7 +2,7 @@
 import useAuthHttpClient from "@src/hooks/useAuthHttpClient";
 import { isAxiosError } from "axios";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 function Userdatatest() {
   // const [userdata, setuserdata] = useState("");
@@ -18,6 +18,7 @@ function Userdatatest() {
 
   useEffect(() => {
     getuserdata();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <div>Userdatatest</div>;
