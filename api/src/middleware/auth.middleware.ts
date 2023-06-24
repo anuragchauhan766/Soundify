@@ -22,7 +22,6 @@ export const authenticate: RequestHandler = async (
     return next(new ErrorResponse("Unauthoriazed", 401));
   }
   try {
-    console.log(accessToken);
     const decoded = jwt.verify(
       accessToken,
       process.env.ACCESS_TOKEN_SECRET_KEY as string
