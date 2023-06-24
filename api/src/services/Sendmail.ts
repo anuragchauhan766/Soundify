@@ -26,6 +26,7 @@ export const sendMail = async (
     viewEngine: {
       extname: ".handlebars",
       partialsDir: path.resolve("./src/views"),
+      defaultLayout: false,
     },
     viewPath: path.resolve("./src/views"),
     extName: ".handlebars",

@@ -8,8 +8,9 @@ import { useState } from "react";
 import Error from "./Error";
 import SubmitButton from "./SubmitButton";
 import EmailVarificationDialog from "./EmailVarificationDialogbox";
-import axios from "axios";
+
 import { LoginDataType } from "@src/types/User";
+import { httpClient } from "@config/axiosConfig";
 
 const defaultUserDetails: LoginDataType = {
   email: "",
@@ -21,6 +22,16 @@ function LoginForm() {
   const [open, setOpen] = useState(false);
   const { login } = useAuth();
   const [err, seterr] = useState("");
+  const sendVerficationmail = async (email: string) => {
+    try {
+      await httpClient.post("/auth/send-verification-mail", {
+        email,
+      });
+      setOpen(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const {
     values,
     handleSubmit,
@@ -55,25 +66,6 @@ function LoginForm() {
       }
     },
   });
-  const sendVerficationmail = async (email: string) => {
-    try {
-      await axios.post("/auth/send-verification-mail", {
-        email,
-      });
-      setOpen(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  // useEffect(() => {
-  //   if (user) {
-  //     if (!user.isVerified) {
-  //       sendVerficationmail(user.email as string);
-  //     } else {
-  //       navigate("/");
-  //     }
-  //   }
-  // }, [user]);
 
   return (
     <form
