@@ -12,6 +12,7 @@ import errorHandler from "./middleware/errorHandler.js";
 import "./db/connect.js";
 
 const app = express();
+
 app.use(json());
 app.use(
   cors({
