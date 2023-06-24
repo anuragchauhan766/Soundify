@@ -99,7 +99,7 @@ export const refresh: RequestHandler = async (
   next: NextFunction
 ) => {
   const refreshToken: string | undefined = req.cookies.refreshtoken;
-  console.log(refreshToken);
+
   if (!refreshToken) {
     return next(new ErrorResponse("Unauthorized", 401));
   }
@@ -250,10 +250,15 @@ export const sendVerificationMail: RequestHandler = async (
   }
 };
 export const signout: RequestHandler = async (req, res, next) => {
-  res.clearCookie("refreshToken", {
+  res.clearCookie("refreshtoken", {
     httpOnly: true,
     sameSite: "none",
     secure: true,
     path: "/api/auth/refresh",
   });
+  res.status(200).json({
+    success: true,
+    message: "Signout Successfully",
+  });
+  res.end();
 };

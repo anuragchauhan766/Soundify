@@ -18,10 +18,11 @@ export const authenticate: RequestHandler = async (
     accessToken = req.headers.authorization.split(" ")[1];
   }
 
-  if (!accessToken) {
+  if (accessToken === undefined || accessToken === "") {
     return next(new ErrorResponse("Unauthoriazed", 401));
   }
   try {
+    console.log(accessToken);
     const decoded = jwt.verify(
       accessToken,
       process.env.ACCESS_TOKEN_SECRET_KEY as string

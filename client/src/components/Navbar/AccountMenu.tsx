@@ -7,9 +7,13 @@ import Tooltip from "@mui/material/Tooltip";
 
 import React, { useState } from "react";
 import { NavLink as RouterNavLink } from "react-router-dom";
-import { Link } from "@mui/material";
+import { Link, ListItemIcon } from "@mui/material";
+import { useAuth } from "@context/AuthContext";
+import { Logout } from "@mui/icons-material";
 
 export default function AccountMenu() {
+  const { user, signout } = useAuth();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -86,11 +90,31 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <Link to="/auth/signin" component={RouterNavLink}>
-          <MenuItem>
-            <Avatar sx={{ backgroundColor: "white", color: "black" }} /> Sign in
-          </MenuItem>
-        </Link>
+        {user ? (
+          <>
+            <MenuItem onClick={handleClose}>
+              <Avatar /> Profile
+            </MenuItem>
+
+            <MenuItem
+              onClick={async () => {
+                await signout();
+              }}
+            >
+              <ListItemIcon>
+                <Logout fontSize="small" sx={{ color: "white" }} />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          </>
+        ) : (
+          <Link to="/auth/signin" component={RouterNavLink}>
+            <MenuItem>
+              <Avatar sx={{ backgroundColor: "white", color: "black" }} /> Sign
+              in
+            </MenuItem>
+          </Link>
+        )}
       </Menu>
     </>
   );

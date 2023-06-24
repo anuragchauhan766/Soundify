@@ -1,20 +1,24 @@
-import { authHttpClient } from "@config/axiosConfig";
+// import { authHttpClient } from "@config/axiosConfig";
+import useAuthHttpClient from "@src/hooks/useAuthHttpClient";
+import { isAxiosError } from "axios";
+
 import { useEffect, useState } from "react";
 
 function Userdatatest() {
-  const [userdata, setuserdata] = useState("");
+  // const [userdata, setuserdata] = useState("");
+  const authHttpClient = useAuthHttpClient();
   async function getuserdata() {
     try {
       const res = await authHttpClient.get("/user");
       console.log(res);
     } catch (err) {
-      console.log(err);
+      if (isAxiosError(err)) console.log(err);
     }
   }
 
   useEffect(() => {
     getuserdata();
-  }, [userdata]);
+  }, []);
 
   return <div>Userdatatest</div>;
 }
