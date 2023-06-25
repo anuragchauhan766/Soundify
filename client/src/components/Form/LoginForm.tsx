@@ -79,8 +79,8 @@ function LoginForm() {
         name="email"
         label="Email"
         value={values.email ?? ""}
-        handleChange={handleChange}
-        handleblur={handleBlur}
+        onChange={handleChange}
+        onBlur={handleBlur}
         error={errors.email}
         touched={touched.email}
       />
@@ -91,8 +91,8 @@ function LoginForm() {
         name="password"
         label="Password"
         value={values.password ?? ""}
-        handleChange={handleChange}
-        handleblur={handleBlur}
+        onChange={handleChange}
+        onBlur={handleBlur}
         // error={errors.password}
         touched={touched.password}
       />

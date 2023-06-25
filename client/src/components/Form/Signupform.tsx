@@ -63,8 +63,8 @@ function Signupform() {
         name="name"
         label="Profile Name"
         value={values.name ?? ""}
-        handleChange={handleChange}
-        handleblur={handleBlur}
+        onChange={handleChange}
+        onBlur={handleBlur}
         error={errors.name}
         touched={touched.name}
       />
@@ -76,8 +76,8 @@ function Signupform() {
         name="email"
         label="Email"
         value={values.email ?? ""}
-        handleChange={handleChange}
-        handleblur={handleBlur}
+        onChange={handleChange}
+        onBlur={handleBlur}
         error={errors.email}
         touched={touched.email}
       />
@@ -89,8 +89,8 @@ function Signupform() {
         name="password"
         label="Password"
         value={values.password ?? ""}
-        handleChange={handleChange}
-        handleblur={handleBlur}
+        onChange={handleChange}
+        onBlur={handleBlur}
         error={errors.password}
         touched={touched.password}
       />

@@ -20,7 +20,7 @@ const errorHandler = (
     status = 401;
     err = {
       name: error.name,
-      messgage: error.message,
+      message: error.message,
     };
   } else if (error instanceof Error.ValidationError) {
     const errors: any = {};

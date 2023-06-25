@@ -8,12 +8,19 @@ export type Signup = ({
   gender,
   password,
 }: SignupDataType) => Promise;
+export type ForgotPassword = (email: string) => Promise<string>;
+export type ResetPassword = (
+  password: string,
+  resetpasswordToken: string
+) => Promise<string>;
 export type RefreshAccessToken = () => Promise<string | undefined>;
 export interface AuthContextType {
   user?: Partial<UserDataType>;
   login: Login;
   signup: Signup;
   signout: () => Promise<string>;
+  forgotpassword: ForgotPassword;
+  resetpassword: ResetPassword;
 }
 
 export interface AuthResponse {

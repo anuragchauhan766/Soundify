@@ -2,7 +2,9 @@ import { ReactNode, createContext, useContext, useState } from "react";
 import {
   AuthContextType,
   AuthResponse,
+  ForgotPassword,
   Login,
+  ResetPassword,
   Signup,
 } from "../types/AuthContext";
 
@@ -74,12 +76,53 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     return err;
   };
+  const forgotpassword: ForgotPassword = async (email) => {
+    let err = "";
+    try {
+      await httpClient.post<AuthResponse>("/auth/forgotpassword", {
+        email,
+      });
+    } catch (error) {
+      if (isAxiosError(error)) {
+        err = error.response?.data.error.message;
+      } else {
+        err = "Opps! Something Unexpected happens";
+      }
+    }
+    return err;
+  };
+  const resetpassword: ResetPassword = async (password, resetpasswordToken) => {
+    let err = "";
+    try {
+      await httpClient.post<AuthResponse>(
+        "/auth/resetpassword",
+        {
+          password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${resetpasswordToken}`,
+          },
+        }
+      );
+    } catch (error) {
+      if (isAxiosError(error)) {
+        err = error.response?.data.error.message;
+      } else {
+        err = "Opps! Something Unexpected happens";
+      }
+    }
+
+    return err;
+  };
 
   const value = {
     user,
     login,
     signup,
     signout,
+    forgotpassword,
+    resetpassword,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

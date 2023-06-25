@@ -138,13 +138,20 @@ export const forgotpassword: RequestHandler = async (
       return next(new ErrorResponse("Email could not be sent", 404));
     }
     const resetPasswordToken = await user.getResetPasswordToken();
-    const reseturl = `${process.env.CLIENT_BASE_URL}/auth/reset-password?t=${resetPasswordToken}`;
+    const reseturl = `${process.env.CLIENT_BASE_URL}/auth/resetpassword?t=${resetPasswordToken}`;
     const name = user.name;
-    await sendMail(email, reseturl, name, "RESET YOUR PASSWORD", email);
+    await sendMail(
+      email,
+      reseturl,
+      name,
+      "RESET YOUR PASSWORD",
+      "forgotpasswordmail"
+    );
     res
       .status(200)
       .json({ success: true, message: "Password Reset Email sent" });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -163,7 +170,11 @@ export const resetpassword: RequestHandler = async (
     resetPasswordToken = req.headers.authorization.split(" ")[1];
   }
 
-  if (!resetPasswordToken) {
+  if (
+    !resetPasswordToken ||
+    resetPasswordToken === undefined ||
+    resetPasswordToken === null
+  ) {
     return next(new ErrorResponse("Unauthoriazed", 401));
   }
   try {
@@ -172,14 +183,16 @@ export const resetpassword: RequestHandler = async (
       process.env.RESET_PASSWORD_SECRET_KEY as string
     ) as JwtPayload;
     const { password }: { password: string } = req.body;
-    const user = await User.findOne({ _id: decoded.id, resetPasswordToken });
+    const user = await User.findOne({
+      _id: decoded.id,
+      resetPasswordToken: decoded.randomstring,
+    });
     if (!user) {
       return next(new ErrorResponse("Wrong Reset Password token", 404));
     }
     user.password = password;
     user.resetPasswordToken = undefined;
     await user.save();
-    console.log(user);
     res
       .status(200)
       .json({ success: true, message: "Password Reset successfully" });
