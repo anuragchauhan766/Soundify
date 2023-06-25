@@ -1,6 +1,6 @@
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import React, { InputHTMLAttributes, useRef, useState } from "react";
+import { InputHTMLAttributes, useRef, useState } from "react";
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   name?: string;
