@@ -1,4 +1,8 @@
-import { getAccessToken, setAccesstoken } from "@src/helper/accesstoken";
+import {
+  getAccessToken,
+  refreshAccessToken,
+  setAccesstoken,
+} from "@src/helper/Token";
 import { AuthResponse } from "@src/types/AuthContext";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
@@ -17,18 +21,10 @@ const authHttpClient = axios.create({
   },
 });
 
-const refreshAccessToken = async () => {
-  const response = await httpClient.get<AuthResponse>("/auth/refresh");
-
-  const { accessToken } = response.data;
-  return accessToken;
-};
-
 authHttpClient.interceptors.request.use(
   async (
     config: InternalAxiosRequestConfig
   ): Promise<InternalAxiosRequestConfig> => {
-    console.log("requset interceptor");
     let accessToken = getAccessToken();
 
     if (!accessToken) {
@@ -47,9 +43,6 @@ authHttpClient.interceptors.request.use(
 authHttpClient.interceptors.response.use(
   (res) => res,
   async (error: AxiosError<AuthResponse>) => {
-    console.log("respone interceptor");
-
-    console.log(error);
     const originalRequest = error.config as InternalAxiosRequestConfig;
     if (
       error.response?.status === 401 &&

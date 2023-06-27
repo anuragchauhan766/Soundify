@@ -1,4 +1,10 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   AuthContextType,
   AuthResponse,
@@ -10,9 +16,9 @@ import {
 
 import { isAxiosError } from "axios";
 import { UserDataType } from "../types/User";
-import { httpClient } from "@config/axiosConfig";
+import { authHttpClient, httpClient } from "@config/axiosConfig";
 
-import { setAccesstoken } from "@src/helper/accesstoken";
+import { setAccesstoken } from "@src/helper/Token";
 import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -21,6 +27,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<Partial<UserDataType> | undefined>(
     undefined
   );
+  const getUserdetail = () => {
+    authHttpClient
+      .get("/user")
+      .then((res) => setUser(res.data))
+      .catch((e) => e);
+  };
+  useEffect(() => {
+    getUserdetail();
+  }, []);
+
   const navigate = useNavigate();
   const login: Login = async ({ email, password }) => {
     let err = "";

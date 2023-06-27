@@ -1,6 +1,6 @@
 import { httpClient } from "@config/axiosConfig";
 import { useAuth } from "@context/AuthContext";
-import { getAccessToken, setAccesstoken } from "@src/helper/accesstoken";
+import { getAccessToken, setAccesstoken } from "@src/helper/Token";
 import { AuthResponse } from "@src/types/AuthContext";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 

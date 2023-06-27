@@ -9,5 +9,6 @@ export interface SignupDataType extends LoginDataType {
   password: string;
 }
 export interface UserDataType extends SignupDataType {
+  _id: string;
   isVerified: boolean;
 }
